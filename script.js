@@ -1,61 +1,45 @@
-/* ----- REGISTER PAGE VALIDATION ----- */
-if (document.getElementById("registerForm")) {
+// Save registered user in localStorage
+document.addEventListener("DOMContentLoaded", () => {
 
-    document.getElementById("registerForm").addEventListener("submit", function (e) {
-        e.preventDefault();
+  const registerForm = document.getElementById("registerForm");
+  const loginForm = document.getElementById("loginForm");
 
-        let valid = true;
+  // Registration logic
+  if (registerForm) {
+    registerForm.addEventListener("submit", (e) => {
+      e.preventDefault();
 
-        function check(id, errorId, message) {
-            let field = document.getElementById(id);
-            let error = document.getElementById(errorId);
+      const user = {
+        firstName: document.getElementById("firstName").value,
+        middleName: document.getElementById("middleName").value,
+        lastName: document.getElementById("lastName").value,
+        email: document.getElementById("email").value,
+        mobile: document.getElementById("mobile").value,
+        username: document.getElementById("reg-username").value,
+        password: document.getElementById("reg-password").value,
+      };
 
-            if (field.value.trim() === "") {
-                error.textContent = message;
-                valid = false;
-            } else {
-                error.textContent = "";
-            }
-        }
-
-        check("firstName", "firstNameError", "First name is required");
-        check("lastName", "lastNameError", "Last name is required");
-        check("email", "emailError", "Email is required");
-        check("reg-username", "regUsernameError", "Username is required");
-        check("reg-password", "regPasswordError", "Password is required");
-
-        if (valid) {
-            alert("Registration successful!");
-            window.location.href = "index.html";
-        }
+      localStorage.setItem("demoUser", JSON.stringify(user));
+      alert("Registration successful!");
+      window.location.href = "index.html";
     });
-}
+  }
 
-/* ----- LOGIN PAGE VALIDATION ----- */
-if (document.getElementById("loginForm")) {
+  // Login logic
+  if (loginForm) {
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
 
-    document.getElementById("loginForm").addEventListener("submit", function (e) {
-        e.preventDefault();
+      const savedUser = JSON.parse(localStorage.getItem("demoUser"));
 
-        let valid = true;
+      const username = document.getElementById("login-username").value;
+      const password = document.getElementById("login-password").value;
 
-        function check(id, errorId, message) {
-            let field = document.getElementById(id);
-            let error = document.getElementById(errorId);
-
-            if (field.value.trim() === "") {
-                error.textContent = message;
-                valid = false;
-            } else {
-                error.textContent = "";
-            }
-        }
-
-        check("login-username", "login-username-error", "Username is required");
-        check("login-password", "login-password-error", "Password is required");
-
-        if (valid) {
-            alert("Login successful!");
-        }
+      if (savedUser && savedUser.username === username && savedUser.password === password) {
+        window.location.href = "dashboard.html";
+      } else {
+        alert("Invalid username or password!");
+      }
     });
-}
+  }
+});
